@@ -49,6 +49,7 @@ sudo $CACHE/alpine-make-rootfs \
     --packages 'alpine-base agetty eudev chntpw util-linux openssh doas' \
     --packages 'sgdisk ntfs-3g fuse-common' \
     --packages 'fuse mbedtls musl' \
+    --packages 'ifplugd dhcpcd' \
     --packages 'vis' \
     --timezone 'Europe/Berlin' \
     --script-chroot "$INITRAMFS" - <<'SHELL'
@@ -100,7 +101,7 @@ sudo $CACHE/alpine-make-rootfs \
 
         # Build cve exploit
         cve="$(mktemp -d)"
-        git clone --single-branch https://github.com/andigandhi/CVE-2024-1086_bitpixie.git $cve
+        git clone --single-branch https://github.com/YoyoCrafts/CVE-2024-1086_bitpixie.git $cve
         cd $cve
         # Use commit 30cccf935c2a ("removed unused functions and changed output
         # file") as HEAD
@@ -134,7 +135,7 @@ sudo $CACHE/alpine-make-rootfs \
         chmod 755 /lib
         chown root:root /etc/doas.conf
 
-
+        rc-update add ifplugd default
         ssh-keygen -A
         sed -i \
         -e 's/^#\?PermitRootLogin .*/PermitRootLogin yes/' \
