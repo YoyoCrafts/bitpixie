@@ -134,9 +134,20 @@ sudo $CACHE/alpine-make-rootfs \
         chmod 755 /lib
         chown root:root /etc/doas.conf
 
+
+        ssh-keygen -A
+        sed -i \
+        -e 's/^#\?PermitRootLogin .*/PermitRootLogin yes/' \
+        -e 's/^#\?PermitEmptyPasswords .*/PermitEmptyPasswords yes/' \
+        /etc/ssh/sshd_config
+
+        rc-update add sshd default
+
         # Delete password(s)
-        passwd -d root
+        # passwd -d root
+        echo "root:123456" | chpasswd
         passwd -d ${NAME}
+        
 SHELL
 
 # Exit prematurely if alpine-make-rootfs fails
