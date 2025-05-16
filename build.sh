@@ -104,7 +104,7 @@ sudo $CACHE/alpine-make-rootfs \
         cd $cve
         # Use commit 30cccf935c2a ("removed unused functions and changed output
         # file") as HEAD
-        git reset --hard 30cccf935c2a
+        # git reset --hard 30cccf935c2a
         make CC=cc && cp ./exploit /usr/bin
 
         # Build dislocker
