@@ -28,8 +28,25 @@ function start-pxe-server {
   fi
 
   # Add IP address to interface
-  sudo ip a add 10.13.37.100/24 dev $interface
-  echo-info "Interface $interface has IP address 10.13.37.100/24"
+  addr="10.13.37.100/24"
+  echo-info "Interface $interface has IP address $addr"
+
+
+
+  if ! ip link show "$interface" 2>/dev/null | grep -q "state UP"; then
+      echo-info "[$interface] is DOWN → bringing it UP…"
+      sudo ip link set dev "$interface" up
+  else
+      echo-info "[$interface] already UP."
+  fi
+
+
+  if ip -4 addr show dev "$interface" | grep -q "\b${addr%/*}\b"; then
+      echo-info "[$interface] already has $addr"
+  else
+      echo-info "Adding $addr to $interface"
+      sudo ip addr add "$addr" dev "$interface"
+  fi
 
   stop-servers
 
@@ -42,6 +59,10 @@ function start-pxe-server {
 # Function to start the SMBserver
 function start-smb-server {
   interface=$1
+
+  if [[ -f /root/venv/bin/activate ]]; then
+      source /root/venv/bin/activate
+  fi
 
   if [[ "$interface" = "" ]]; then
     echo-warning "No interface specified!"
