@@ -78,8 +78,10 @@ fi
 # they are bigger then the other packages
 if ! [ -d "$CACHE/lib" ] || ! [ -f "$OUTPUT_PXE/linux" ]; then
     out 'kernel / drivers missing, downloading...'
-    get_extract_deb 'https://snapshot.debian.org/file/80c35e7ae9d403ebea4a05a83c0cf7871d0c23f7' \
-    '34c3595b6ac8c74fe754d375e04428624e598e4c8ce0d49eaaeceed5324baf31'
+    # get_extract_deb 'https://snapshot.debian.org/file/80c35e7ae9d403ebea4a05a83c0cf7871d0c23f7' \
+    # '34c3595b6ac8c74fe754d375e04428624e598e4c8ce0d49eaaeceed5324baf31'
+    get_extract_deb 'https://debian-security.sipwise.com/debian-security/pool/main/l/linux-signed-amd64/linux-image-6.1.0-17-amd64_6.1.69-1_amd64.deb' \
+    '881c300cbd3c40c7f815eb52d5ba08f9e1635c2c176e11d89ab88d99c651bb26'
 
     out 'Copying files...'
     find $TEMPDIR -maxdepth 1 -type d -name 'lib' -exec cp -R {} $CACHE/lib \;
