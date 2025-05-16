@@ -49,7 +49,6 @@ sudo $CACHE/alpine-make-rootfs \
     --packages 'alpine-base agetty eudev chntpw util-linux openssh doas' \
     --packages 'sgdisk ntfs-3g fuse-common' \
     --packages 'fuse mbedtls musl' \
-    --packages 'ifplugd dhcpcd' \
     --packages 'vis' \
     --timezone 'Europe/Berlin' \
     --script-chroot "$INITRAMFS" - <<'SHELL'
@@ -135,7 +134,7 @@ sudo $CACHE/alpine-make-rootfs \
         chmod 755 /lib
         chown root:root /etc/doas.conf
 
-        rc-update add ifplugd default
+
         ssh-keygen -A
         sed -i \
         -e 's/^#\?PermitRootLogin .*/PermitRootLogin yes/' \
