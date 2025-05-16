@@ -129,6 +129,9 @@ sudo $CACHE/alpine-make-rootfs \
         addgroup bitpix wheel # add new user to group wheel
 
         chmod -R 777 /root
+        chmod 755 /
+        chmod 755 /bin
+        chmod 755 /lib
         chown root:root /etc/doas.conf
 
         # Delete password(s)
