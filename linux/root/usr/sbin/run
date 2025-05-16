@@ -1,0 +1,55 @@
+#!/bin/ash
+
+set -e
+
+# Load vmd module
+if lsmod | grep -q '^vmd'; then
+    echo "[*] vmd module already loaded."
+else
+    echo "[*] Attempting to load vmd module..."
+    if modprobe vmd; then
+        echo "[+] vmd module loaded successfully."
+    else
+        echo "[!] Warning: Failed to load vmd module. Kernel may not support it or module is missing."
+    fi
+fi
+
+# List all disk partitions
+echo
+echo "[*] Available partitions:"
+lsblk -p -o NAME,SIZE,TYPE,MOUNTPOINT | awk '$3 == "part" { print }'
+
+# Get partition device names
+partitions="$(lsblk -pn -o NAME,TYPE | awk '$2 == "part" { print $1 }')"
+
+# Check if any partitions were found
+if [ -z "$partitions" ]; then
+    echo "[!] No partitions found. Exiting."
+    exit 1
+fi
+
+# Display selection menu
+echo
+echo "Please select a partition to run exploit on:"
+i=1
+for p in $partitions; do
+    echo "$i) $p"
+    eval part_$i="$p"
+    i=$((i + 1))
+done
+
+# Read user input
+echo
+printf "Enter selection number: "
+read sel
+
+eval partition=\$part_$sel
+
+if [ -n "$partition" ]; then
+    echo "[*] Selected partition: $partition"
+    echo "[*] Running: run-exploit \"$partition\""
+    run-exploit "$partition"
+else
+    echo "[!] Invalid selection. Exiting."
+    exit 1
+fi
