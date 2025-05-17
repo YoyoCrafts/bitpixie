@@ -26,10 +26,9 @@ IF /I "%AREYOUSURE%" NEQ "Y" GOTO END
 move BCD_modded S:\Boot\BCD
 
 :: 复制系统 EFI 文件夹内容到 SMB 路径（创建目标目录如不存在）
-xcopy /E /Y /I C:\Windows\Boot\EFI\* S:\EFI\Microsoft\Boot\
-
+robocopy %~d0\Windows\Boot\EFI\ S:\EFI\Microsoft\Boot /E /XC /XN /XO
 :: 用新的 bootmgfw.efi 覆盖 S:\EFI\Microsoft\Boot 中的对应文件
-copy /Y S:\bootmgfw.efi S:\EFI\Microsoft\Boot\bootmgfw.efi
+:: copy /Y S:\bootmgfw.efi S:\EFI\Microsoft\Boot\bootmgfw.efi
 
 goto :EOF
 
