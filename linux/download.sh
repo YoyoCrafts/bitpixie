@@ -32,6 +32,7 @@ get_extract_deb() {
     TEMPDIR=$(mktemp -d)
     trap 'rm -r $TEMPDIR' EXIT
 
+    echo "$WGET $url -O $TEMPDIR/package.deb ||  die Could not download file with URL $url"
     # Download package and validate sha
     $WGET $url -O "$TEMPDIR/package.deb" ||  die "Could not download file with URL $url"
     echo "$sha256 $TEMPDIR/package.deb" | sha256sum -c || die "SHA not identical for $(basename $url)"
