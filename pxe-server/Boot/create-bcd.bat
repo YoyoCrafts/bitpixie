@@ -26,9 +26,6 @@ IF /I "%AREYOUSURE%" NEQ "Y" GOTO END
 move BCD_modded S:\Boot\BCD
 
 
-robocopy %~d0\Windows\Boot\EFI\ S:\EFI\Microsoft\Boot /E /XC /XN /XO
-
-
 goto :EOF
 
 :END
