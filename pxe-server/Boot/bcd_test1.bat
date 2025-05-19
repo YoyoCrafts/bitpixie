@@ -10,8 +10,8 @@ bcdedit /store BCD_modded /set {%REBOOT_GUID%} path "\shimx64.efi"
 bcdedit /store BCD_modded /set {%REBOOT_GUID%} device boot
 bcdedit /store BCD_modded /set {%REBOOT_GUID%} pxesoftreboot yes
 
-bcdedit /store BCD_modded /set {default} recoveryenabled yes
-bcdedit /store BCD_modded /set {default} recoverysequence {%REBOOT_GUID%}
+@REM bcdedit /store BCD_modded /set {default} recoveryenabled yes
+@REM bcdedit /store BCD_modded /set {default} recoverysequence {%REBOOT_GUID%}
 bcdedit /store BCD_modded /set {default} path "\\"
 bcdedit /store BCD_modded /set {default} winpe yes
 
