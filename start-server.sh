@@ -56,6 +56,47 @@ function start-pxe-server {
   echo-info "Stopping dnsmasq..."
 }
 
+
+
+# Function to start the PXE and DHCP server
+function start-pxe2-server {
+  interface=$1
+
+  if [[ "$interface" = "" ]]; then
+    echo-warning "No interface specified!"
+    printInfo
+    exit
+  fi
+
+  # Add IP address to interface
+  addr="10.13.37.100/24"
+  echo-info "Interface $interface has IP address $addr"
+
+
+
+  if ! ip link show "$interface" 2>/dev/null | grep -q "state UP"; then
+      echo-info "[$interface] is DOWN → bringing it UP…"
+      sudo ip link set dev "$interface" up
+  else
+      echo-info "[$interface] already UP."
+  fi
+
+
+  if ip -4 addr show dev "$interface" | grep -q "\b${addr%/*}\b"; then
+      echo-info "[$interface] already has $addr"
+  else
+      echo-info "Adding $addr to $interface"
+      sudo ip addr add "$addr" dev "$interface"
+  fi
+
+  stop-servers
+
+  # Start dnsmasq
+  echo-info "Starting dnsmasq..."
+  sudo dnsmasq --no-daemon --interface=$interface --dhcp-range=10.13.37.100,10.13.37.200,255.255.255.0,1h --dhcp-boot=shimx64.efi --enable-tftp --tftp-root=$SCRIPTPATH/pxe-server
+  echo-info "Stopping dnsmasq..."
+}
+
 # Function to start the SMBserver
 function start-smb-server {
   interface=$1
@@ -93,7 +134,12 @@ if [[ "$1" = "smb" ]]; then
 elif [[ "$1" = "pxe" ]]; then
   start-pxe-server $2
   exit
+elif [[ "$1" = "pxe2" ]]; then
+  start-pxe2-server $2
+  exit  
 else
+
+
   printInfo
   exit
 fi
